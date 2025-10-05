@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,8 @@ import {
   Navigation,
   Sparkles,
   Clock,
-  Star
+  Star,
+  ArrowRight
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/travel-hero.jpg";
@@ -249,16 +251,16 @@ const Index = () => {
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center animate-slide-up" style={{animationDelay: '0.4s'}}>
-              <Button 
-                variant="hero" 
-                size="lg" 
-                onClick={startVoiceRecognition}
-                disabled={isListening || isProcessing}
-                className="text-lg px-8 py-4"
-              >
-                {isListening ? <MicOff className="mr-2" /> : <Mic className="mr-2" />}
-                {isListening ? "Listening..." : "Ask AI Guide"}
-              </Button>
+              <Link to="/dashboard">
+                <Button 
+                  variant="hero" 
+                  size="lg" 
+                  className="text-lg px-8 py-4"
+                >
+                  Get Started
+                  <ArrowRight className="ml-2" />
+                </Button>
+              </Link>
               
               <Button 
                 variant="travel" 
@@ -267,18 +269,7 @@ const Index = () => {
                 className="text-lg px-8 py-4"
               >
                 <Camera className="mr-2" />
-                Scan Landmark
-              </Button>
-              
-              <Button 
-                variant="floating" 
-                size="lg" 
-                onClick={optimizeTrip}
-                disabled={isProcessing}
-                className="text-lg px-8 py-4"
-              >
-                <Compass className="mr-2" />
-                Optimize Trip
+                Quick Scan
               </Button>
             </div>
           </div>
