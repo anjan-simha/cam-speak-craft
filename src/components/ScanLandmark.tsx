@@ -2,13 +2,15 @@ import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Image as ImageIcon, Sparkles, Star } from "lucide-react";
+import { Camera, Image as ImageIcon, Sparkles, Star, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function ScanLandmark() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [landmarkInfo, setLandmarkInfo] = useState<any>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const openCamera = async () => {
@@ -66,6 +68,50 @@ export function ScanLandmark() {
     }
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload an image file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target?.result as string;
+      setUploadedImage(imageUrl);
+      
+      // Simulate landmark recognition
+      setIsProcessing(true);
+      toast({
+        title: "Processing image...",
+        description: "AI is analyzing the uploaded image"
+      });
+
+      setTimeout(() => {
+        setLandmarkInfo({
+          name: "Uploaded Landmark",
+          description: "AI has identified this landmark from your uploaded image.",
+          facts: ["Historical monument", "Famous architecture", "Cultural significance"],
+          rating: 4.6
+        });
+        setIsProcessing(false);
+        
+        toast({
+          title: "Landmark recognized!",
+          description: "Upload processed successfully"
+        });
+      }, 2000);
+    };
+    
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="p-6 md:p-8 space-y-6">
       <div>
@@ -75,35 +121,81 @@ export function ScanLandmark() {
         </p>
       </div>
 
-      {/* Camera View */}
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Camera className="w-5 h-5" />
-            Live Camera Feed
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="relative bg-black rounded-lg overflow-hidden">
-            <video 
-              ref={videoRef}
-              className="w-full h-96 object-cover"
-              playsInline
-              muted
-            />
-            <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-4">
-              <Button onClick={openCamera} variant="hero" size="lg">
-                <Camera className="mr-2" />
-                Start Camera
-              </Button>
-              <Button onClick={captureImage} variant="travel" size="lg">
-                <ImageIcon className="mr-2" />
-                Capture & Analyze
-              </Button>
+      {/* Camera and Upload Section */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Camera View */}
+        <Card className="overflow-hidden">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Camera className="w-5 h-5" />
+              Camera Scan
+            </CardTitle>
+            <CardDescription>Use your camera to scan landmarks in real-time</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="relative bg-black rounded-lg overflow-hidden">
+              <video 
+                ref={videoRef}
+                className="w-full h-64 object-cover"
+                playsInline
+                muted
+              />
+              <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-4">
+                <Button onClick={openCamera} variant="hero" size="sm">
+                  <Camera className="mr-2" />
+                  Start Camera
+                </Button>
+                <Button onClick={captureImage} variant="travel" size="sm">
+                  <ImageIcon className="mr-2" />
+                  Capture
+                </Button>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Upload View */}
+        <Card className="overflow-hidden">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="w-5 h-5" />
+              Upload Image
+            </CardTitle>
+            <CardDescription>Upload a photo of a landmark from your device</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="relative bg-muted rounded-lg overflow-hidden h-64 flex items-center justify-center">
+              {uploadedImage ? (
+                <img src={uploadedImage} alt="Uploaded landmark" className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-center p-8">
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground mb-4">
+                    No image uploaded yet
+                  </p>
+                </div>
+              )}
+              <div className="absolute bottom-4 left-4 right-4 flex justify-center">
+                <Button 
+                  onClick={() => fileInputRef.current?.click()} 
+                  variant="floating" 
+                  size="sm"
+                >
+                  <Upload className="mr-2" />
+                  Choose Image
+                </Button>
+              </div>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageUpload}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Results */}
       {landmarkInfo && (
