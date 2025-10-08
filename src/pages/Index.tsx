@@ -243,7 +243,7 @@ const Index = () => {
         
         <div className="relative z-10 text-center text-white p-6 max-w-4xl mx-auto">
           <div className="animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up text-white drop-shadow-[0_0_40px_rgba(59,130,246,0.8)] [text-shadow:_0_0_60px_rgb(59_130_246_/_80%),_0_0_20px_rgb(255_255_255_/_60%)]">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
               AI Tourist Guide
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-white/90 animate-slide-up" style={{animationDelay: '0.2s'}}>
