@@ -246,7 +246,7 @@ const Index = () => {
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] tracking-tight">
               AI Tourist Guide
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-300 animate-slide-up" style={{animationDelay: '0.2s'}}>
+            <p className="text-xl md:text-2xl mb-8 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] animate-slide-up" style={{animationDelay: '0.2s'}}>
               Multimodal Travel Assistant with Dynamic Trip Optimization
             </p>
             
